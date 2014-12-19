@@ -7,8 +7,6 @@ var Snake = function(draw)
     this.length = 1;
     this.direction = 'up';
     this.rate = 300;
-    this.cellHeight = 10;
-    this.cellWidth = 10;
 
     /**
      * Set the current X/Y coordinates of the snake head
@@ -68,7 +66,7 @@ var Snake = function(draw)
         // Check our length and remove the right amount from the end
         if (this.track.length > this.length) {
             var item = this.track.shift();
-            this.draw.removeMarker(item.x, item.y, this.cellWidth, this.cellHeight);
+            this.draw.removeMarker(item.x, item.y);
         }
     },
 
@@ -81,7 +79,7 @@ var Snake = function(draw)
      * @param  {integer} height Height of the element to draw
      * @return {object} X/Y coordinates of where we moved to
      */
-    this.move = function(x, y, width, height)
+    this.move = function(x, y)
     {
         var self = this;
         var x = this.currentX + x;
@@ -93,7 +91,7 @@ var Snake = function(draw)
         this.track.push({x: x, y: y});
 
         window.requestAnimationFrame(function() {
-            self.draw.marker(x, y, width, height);
+            self.draw.marker(x, y);
         });
 
         this.trim();
@@ -122,7 +120,7 @@ var Snake = function(draw)
             case 'right':
                 x = 10; y = 0; break;
         }
-        return this.move(x, y, this.cellWidth, this.cellHeight);
+        return this.move(x, y);
     };
 
     /**

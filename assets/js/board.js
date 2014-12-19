@@ -44,9 +44,7 @@ var Board = function(board, snake, draw)
      */
     this.drawRandomMarker = function()
     {
-        this.randomMarker = this.draw.random(
-            this.snake.track, this.cols, this.rows, this.cellWidth, this.cellHeight
-        );
+        this.randomMarker = this.draw.random(this.snake.track, this.cols, this.rows);
     },
 
     /**
