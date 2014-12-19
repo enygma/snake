@@ -20,7 +20,12 @@
 
             setInterval(function() {
                 if (b.fail == false && b.pause == false) {
-                    b.advance();
+                    try {
+                        b.advance();
+                    } catch(err) {
+                        b.fail = true;
+                        console.log(err);
+                    }
                 }
             }, snake.rate);
 
