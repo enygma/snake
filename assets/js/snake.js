@@ -10,25 +10,48 @@ var Snake = function(draw)
     this.cellHeight = 10;
     this.cellWidth = 10;
 
+    /**
+     * Set the current X/Y coordinates of the snake head
+     *
+     * @param {integer} x X axis location
+     * @param {integer} y Y axis location
+     */
     this.setCurrent = function(x, y)
     {
         this.currentX = x;
         this.currentY = y;
-    };
+    },
+
+    /**
+     * Get the current X/Y coordinates of the snake head
+     *
+     * @return {object} X/Y coordinates
+     */
     this.getCurrent = function()
     {
         return {
             x: this.currentX,
             y: this.currentY
         }
-    };
+    },
+
+    /**
+     * Place the snake and start it off and running
+     *
+     * @param  {integer} x Starting X location
+     * @param  {integer} y Starting Y location
+     */
     this.start = function(x, y)
     {
         this.setCurrent(x, y);
         this.track.push({x: x, y: y});
 
         this.draw.marker(x, y, 10, 10);
-    };
+    },
+
+    /**
+     * Trim down the snake based on the length
+     */
     this.trim = function()
     {
         // Check our length and remove the right amount from the end
@@ -36,7 +59,17 @@ var Snake = function(draw)
             var item = this.track.shift();
             this.draw.removeMarker(item.x, item.y, this.cellWidth, this.cellHeight);
         }
-    };
+    },
+
+    /**
+     * Move the snake across the board in the right direction
+     *
+     * @param  {integer} x How much to move on X axis
+     * @param  {interger} y How much to move on Y axis
+     * @param  {integer} width Width of the element to draw
+     * @param  {integer} height Height of the element to draw
+     * @return {object} X/Y coordinates of where we moved to
+     */
     this.move = function(x, y, width, height)
     {
         var self = this;
@@ -56,7 +89,13 @@ var Snake = function(draw)
 
         // retuned where we moved to
         return {x: x, y: y};
-    };
+    },
+
+    /**
+     * Move the snake around based on the current direction
+     *
+     * @return {object} X/Y coordinates snake was moved to
+     */
     this.slither = function()
     {
         var x = 0;
@@ -74,6 +113,13 @@ var Snake = function(draw)
         }
         return this.move(x, y, this.cellWidth, this.cellHeight);
     };
+
+    /**
+     * Change the snake's direction
+     *     Checks to ensure we can't go backwards
+     *
+     * @param  {object} event Event from the onkeypress
+     */
     this.changeDirection = function(event)
     {
         switch(event.which) {

@@ -1,7 +1,6 @@
 var Board = function(board, snake, draw)
 {
     this.context = board.getContext('2d'),
-
         this.draw = draw,
         this.snake = snake,
 
@@ -15,6 +14,9 @@ var Board = function(board, snake, draw)
         this.pause = false,
         this.interval;
 
+    /**
+     * Render the board and kick off the game (start)
+     */
     this.render = function()
     {
         this.cols = Math.floor(board.width/this.cellWidth);
@@ -31,7 +33,14 @@ var Board = function(board, snake, draw)
             this.snake.track, this.cols, this.rows, this.cellWidth, this.cellHeight
         );
         this.start();
-    };
+    },
+
+    /**
+     * Draw the cells in the line
+     *
+     * @param  {integer} rows Number of Rows
+     * @param  {integer} cols Number of columns
+     */
     this.drawLines = function(rows, cols)
     {
         var yStart = 0;
@@ -40,7 +49,14 @@ var Board = function(board, snake, draw)
             this.drawRow(yStart, cols);
             yStart += this.cellHeight;
         }
-    }
+    },
+
+    /**
+     * Draw a row in the grid
+     *
+     * @param  {integer} line Current line number
+     * @param  {integer} cols Number of columns
+     */
     this.drawRow = function(line, cols)
     {
         var xStart = 0;
@@ -49,7 +65,16 @@ var Board = function(board, snake, draw)
             this.draw.cell(xStart, line, this.cellWidth, this.cellHeight);
             xStart += this.cellWidth;
         }
-    };
+    },
+
+    /**
+     * Check for a collision with the rest of the snake
+     *
+     * @param  {integer} x Location on X axis of snake's head
+     * @param  {integer} y Location on Y axis of snake's head
+     * @throws {error} If a collision is found
+     * @return {boolean} Hit (true) or no hit (false)
+     */
     this.collisionCheck = function(x, y)
     {
         // Take off the last one since it's the head
@@ -66,7 +91,15 @@ var Board = function(board, snake, draw)
             throw 'Collision!';
         }
         return collide;
-    };
+    },
+
+    /**
+     * Check to ensure the snake hasn't tried to leave the board edges
+     *
+     * @param  {integer} x Location on X axis of snake head
+     * @param  {integer} y Location on Y axis of snake head
+     * @throws {error} If snake tries to leave the board
+     */
     this.boundsCheck = function(x, y)
     {
         if ((x + this.cellWidth) > board.width) {
@@ -82,7 +115,14 @@ var Board = function(board, snake, draw)
             this.fail = true;
             throw 'Out of bounds - bottom!';
         }
-    };
+    },
+
+    /**
+     * Check for a "match" (when the snake eats a block)
+     *
+     * @param  {integer} x Location on X axis of snake head
+     * @param  {integer} y Location on Y axis of snake head
+     */
     this.matchCheck = function(x, y)
     {
         if (Math.round(x) == this.randomMarker.x && Math.round(y) == this.randomMarker.y) {
@@ -97,12 +137,20 @@ var Board = function(board, snake, draw)
                 this.snake.track, this.cols, this.rows, this.cellHeight, this.cellWidth
             );
         }
-    };
+    },
+
+    /**
+     * Update the game score
+     */
     this.updateScore = function()
     {
         this.score++;
         $('#score').html(this.score);
-    };
+    },
+
+    /**
+     * Advance the game a step
+     */
     this.advance = function()
     {
         var moved = this.snake.slither();
@@ -111,7 +159,11 @@ var Board = function(board, snake, draw)
         this.boundsCheck(moved.x, moved.y);
         this.collisionCheck(moved.x, moved.y);
         this.matchCheck(moved.x, moved.y);
-    }
+    },
+
+    /**
+     * Start off the game - main execution function
+     */
     this.start = function()
     {
         var self = this;

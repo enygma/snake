@@ -11,10 +11,10 @@
 
             var board = document.getElementById('board');
             var context = board.getContext('2d');
-
             var draw = new Draw(context);
             var snake = new Snake(draw);
 
+            // Make the board and kick off the game
             var b = new Board(board, snake, draw);
             b.render();
         });
