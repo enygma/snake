@@ -26,21 +26,21 @@ var Draw = function(context)
     {
         var x = Math.floor(Math.random() * cols) * width;
         var y = Math.floor(Math.random() * rows) * height;
-        var overlap = false;
 
-        // be sure we make one not in our set
+        var found = false;
         $.each(data, function(index, cell) {
             if (Math.round(cell.x) == x && Math.round(cell.y) == y) {
-                // oops, that's in the snake, keep trying
-                overlap = true;
-                this.random(data, cols, rows, height, width);
+                found = true;
             }
         });
 
-        if (overlap == false) {
+        if (found == true) {
+            return this.random(data, cols, rows, width, height);
+        } else {
             this.marker(x, y, width, height, '#1a76bf');
+            return {x: x, y: y};
         }
-    }
+    };
 };
 
 //-----------------------------------------
@@ -61,9 +61,15 @@ var Snake = function(draw)
         this.currentX = x;
         this.currentY = y;
     };
+    this.getCurrent = function()
+    {
+        return {
+            x: this.currentX,
+            y: this.currentY
+        }
+    };
     this.start = function(x, y)
     {
-        console.log('starting at '+x+'/'+y);
         this.setCurrent(x, y);
         this.track.push({x: x, y: y});
 
@@ -154,7 +160,9 @@ var Board = function(board, snake, draw)
 
         // Start up the snake in the middle and put a random marker in place
         this.snake.start(x, y);
-        this.draw.random(this.snake.track, this.cols, this.rows, this.cellWidth, this.cellHeight);
+        this.randomMarker = this.draw.random(
+            this.snake.track, this.cols, this.rows, this.cellWidth, this.cellHeight
+        );
     };
     this.drawLines = function(rows, cols)
     {
@@ -176,14 +184,20 @@ var Board = function(board, snake, draw)
     };
     this.collisionCheck = function(x, y)
     {
+        // Take off the last one since it's the head
+        var track = this.snake.track.slice(1, this.snake.track.length - 1);
+        var collide = false;
+
         // See if we have a collision
-        $.each(this.track, function(index, cell) {
+        $.each(track, function(index, cell) {
             if (cell.x == x && cell.y == y) {
-                console.log('collide!');
-                return true;
+                collide = true;
             }
         });
-        return false;
+        if (collide == true) {
+            throw 'Collision!';
+        }
+        return collide;
     };
     this.boundsCheck = function(x, y)
     {
@@ -207,7 +221,9 @@ var Board = function(board, snake, draw)
             this.updateScore();
             this.snake.length++;
 
-            this.draw.random(this.snake.track, this.cols, this.rows, this.cellHeight, this.cellWidth);
+            this.randomMarker = this.draw.random(
+                this.snake.track, this.cols, this.rows, this.cellHeight, this.cellWidth
+            );
         }
     };
     this.updateScore = function()
@@ -215,4 +231,13 @@ var Board = function(board, snake, draw)
         this.score++;
         $('#score').html(this.score);
     };
+    this.advance = function()
+    {
+        var moved = snake.slither();
+
+        // See if we did something wrong
+        this.boundsCheck(moved.x, moved.y);
+        this.collisionCheck(moved.x, moved.y);
+        this.matchCheck(moved.x, moved.y);
+    }
 };

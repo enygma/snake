@@ -16,7 +16,7 @@
 
             setInterval(function() {
                 if (b.fail == false && b.pause == false) {
-                    snake.slither();
+                    b.advance();
                 }
             }, snake.rate);
 
