@@ -1,7 +1,11 @@
 <html>
     <head>
         <script type="text/javascript" src="/assets/js/jquery-1.11.1.min.js"></script>
+
         <script type="text/javascript" src="/assets/js/board.js"></script>
+        <script type="text/javascript" src="/assets/js/draw.js"></script>
+        <script type="text/javascript" src="/assets/js/snake.js"></script>
+
         <script type="text/javascript">
         $(function() {
 
