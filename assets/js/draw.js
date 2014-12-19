@@ -47,6 +47,8 @@ var Draw = function(context)
     {
         this.context.fillStyle = '#FFFFFF';
         this.context.fillRect(x, y, width, width);
+        this.context.strokeStyle = '#e0e0e0';
+        this.context.strokeRect(x, y, width, height);
     },
 
     /**
