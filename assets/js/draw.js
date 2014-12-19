@@ -77,5 +77,10 @@ var Draw = function(context)
             this.marker(x, y, width, height, '#1a76bf');
             return {x: x, y: y};
         }
-    };
+    },
+
+    this.clearBoard = function(height, width)
+    {
+        this.context.clearRect(0, 0, height, width);
+    }
 };

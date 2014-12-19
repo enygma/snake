@@ -19,20 +19,60 @@ var Board = function(board, snake, draw)
      */
     this.render = function()
     {
+        var self = this;
+
+        // Catch our arrow keys
+        $(document).keydown(function(e) {
+            if (e.which == 32) {
+                self.pause = (self.pause == false) ? true : false;
+            }
+            self.snake.changeDirection(e);
+        });
+
         this.cols = Math.floor(board.width/this.cellWidth);
         this.rows = Math.floor(board.height/this.cellHeight);
 
         this.drawLines(this.rows, this.cols);
+        this.placeSnake();
+        this.drawRandomMarker();
 
-        var x = ((this.cols/2) * this.cellWidth) - (this.cols/2);
-        var y = ((this.rows/2) * this.cellHeight) - (this.rows/2);
+        this.start();
+    },
 
-        // Start up the snake in the middle and put a random marker in place
-        this.snake.start(x, y);
+    /**
+     * Draw the randomly located marker for the snake to eat
+     */
+    this.drawRandomMarker = function()
+    {
         this.randomMarker = this.draw.random(
             this.snake.track, this.cols, this.rows, this.cellWidth, this.cellHeight
         );
-        this.start();
+    },
+
+    /**
+     * Place the snake at the center of the board
+     *     and start it up
+     */
+    this.placeSnake = function()
+    {
+        var x = ((this.cols/2) * this.cellWidth);
+        var y = ((this.rows/2) * this.cellHeight);
+
+        // Start up the snake in the middle and put a random marker in place
+        this.snake.start(x, y);
+    },
+
+    /**
+     * Reset the game and all required info
+     */
+    this.reset = function()
+    {
+        this.snake.reset();
+        this.placeSnake();
+        this.draw.clearBoard(board.height, board.width);
+        this.drawLines(this.rows, this.cols);
+        this.drawRandomMarker();
+        this.score = 0;
     },
 
     /**
@@ -145,7 +185,7 @@ var Board = function(board, snake, draw)
     this.updateScore = function()
     {
         this.score++;
-        $('#score').html(this.score);
+        $('#score-value').html(this.score);
     },
 
     /**
@@ -167,15 +207,6 @@ var Board = function(board, snake, draw)
     this.start = function()
     {
         var self = this;
-
-        // Catch our arrow keys
-        $(document).keydown(function(e) {
-            if (e.which == 32) {
-                self.pause = (self.pause == false) ? true : false;
-            }
-            self.snake.changeDirection(e);
-        });
-
         this.interval = window.setInterval(function() {
             if (self.fail == false && self.pause == false) {
                 try {

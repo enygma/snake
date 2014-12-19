@@ -45,8 +45,18 @@ var Snake = function(draw)
     {
         this.setCurrent(x, y);
         this.track.push({x: x, y: y});
-
         this.draw.marker(x, y, 10, 10);
+    },
+
+    /**
+     * Reset the snake to default values
+     */
+    this.reset = function()
+    {
+        this.rate = 300;
+        this.length = 1;
+        this.setCurrent(0, 0);
+        this.track = new Array();
     },
 
     /**
