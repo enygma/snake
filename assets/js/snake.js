@@ -57,6 +57,7 @@ var Snake = function(draw)
         this.length = 1;
         this.setCurrent(0, 0);
         this.track = new Array();
+        this.direction = 'up';
     },
 
     /**
