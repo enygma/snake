@@ -12,7 +12,8 @@ var Board = function(board, snake, draw)
         this.randomMarker = {},
         this.score = 0,
         this.fail = false,
-        this.pause = false;
+        this.pause = false,
+        this.interval;
 
     this.render = function()
     {
@@ -29,6 +30,7 @@ var Board = function(board, snake, draw)
         this.randomMarker = this.draw.random(
             this.snake.track, this.cols, this.rows, this.cellWidth, this.cellHeight
         );
+        this.start();
     };
     this.drawLines = function(rows, cols)
     {
@@ -86,6 +88,10 @@ var Board = function(board, snake, draw)
         if (Math.round(x) == this.randomMarker.x && Math.round(y) == this.randomMarker.y) {
             this.updateScore();
             this.snake.length++;
+            this.snake.rate -= 10;
+
+            window.clearInterval(this.interval);
+            this.start();
 
             this.randomMarker = this.draw.random(
                 this.snake.track, this.cols, this.rows, this.cellHeight, this.cellWidth
@@ -99,11 +105,34 @@ var Board = function(board, snake, draw)
     };
     this.advance = function()
     {
-        var moved = snake.slither();
+        var moved = this.snake.slither();
 
         // See if we did something wrong
         this.boundsCheck(moved.x, moved.y);
         this.collisionCheck(moved.x, moved.y);
         this.matchCheck(moved.x, moved.y);
+    }
+    this.start = function()
+    {
+        var self = this;
+
+        // Catch our arrow keys
+        $(document).keydown(function(e) {
+            if (e.which == 32) {
+                self.pause = (self.pause == false) ? true : false;
+            }
+            self.snake.changeDirection(e);
+        });
+
+        this.interval = window.setInterval(function() {
+            if (self.fail == false && self.pause == false) {
+                try {
+                    self.advance();
+                } catch(err) {
+                    self.fail = true;
+                    alert(err);
+                }
+            }
+        }, this.snake.rate);
     }
 };

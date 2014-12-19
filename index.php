@@ -17,25 +17,6 @@
 
             var b = new Board(board, snake, draw);
             b.render();
-
-            setInterval(function() {
-                if (b.fail == false && b.pause == false) {
-                    try {
-                        b.advance();
-                    } catch(err) {
-                        b.fail = true;
-                        console.log(err);
-                    }
-                }
-            }, snake.rate);
-
-            // Catch our arrow keys
-            $(document).keydown(function(e) {
-                if (e.which == 32) {
-                    b.pause = (b.pause == false) ? true : false;
-                }
-                snake.changeDirection(e);
-            });
         });
         </script>
     </head>
