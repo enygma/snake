@@ -6,21 +6,26 @@
         $(function() {
 
             var board = document.getElementById('board');
-            var b = new Board(board);
+            var context = board.getContext('2d');
+
+            var draw = new Draw(context);
+            var snake = new Snake(draw);
+
+            var b = new Board(board, snake, draw);
             b.render();
 
             setInterval(function() {
                 if (b.fail == false && b.pause == false) {
-                    b.slither();
+                    snake.slither();
                 }
-            }, b.rate);
+            }, snake.rate);
 
             // Catch our arrow keys
             $(document).keydown(function(e) {
                 if (e.which == 32) {
                     b.pause = (b.pause == false) ? true : false;
                 }
-                b.changeDirection(e);
+                snake.changeDirection(e);
             });
         });
         </script>
