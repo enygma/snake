@@ -10,13 +10,16 @@
             b.render();
 
             setInterval(function() {
-                if (b.fail == false) {
+                if (b.fail == false && b.pause == false) {
                     b.slither();
                 }
             }, b.rate);
 
             // Catch our arrow keys
             $(document).keydown(function(e) {
+                if (e.which == 32) {
+                    b.pause = (b.pause == false) ? true : false;
+                }
                 b.changeDirection(e);
             });
         });

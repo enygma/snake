@@ -11,9 +11,10 @@ var Board = function(board)
         this.randomMarker = {},
         this.length = 1,
         this.direction = 'up',
-        this.rate = 300;
-        this.score = 0;
-        this.fail = false;
+        this.rate = 300,
+        this.score = 0,
+        this.fail = false,
+        this.pause = false;
 
     this.render = function()
     {
